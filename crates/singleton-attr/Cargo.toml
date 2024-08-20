@@ -1,5 +1,6 @@
 [package]
 name = "singleton-attr"
+description = "Singleton procedural attribute"
 version.workspace = true
 authors.workspace = true
 license.workspace = true
