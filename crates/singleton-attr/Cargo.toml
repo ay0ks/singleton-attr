@@ -1,0 +1,15 @@
+[package]
+name = "singleton-attr"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+license-file.workspace = true
+repository.workspace = true
+homepage.workspace = true
+edition.workspace = true
+
+[dependencies]
+singleton-attr-proc-macro = { path = "../singleton-attr-proc-macro" }
+
+[[example]]
+name = "example"
