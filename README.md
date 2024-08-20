@@ -1,5 +1,5 @@
 # singleton-attr
-Simple to use singleton procedural attribute.
+Simple to use singleton procedural attribute
 
 Example:
 ```rust
@@ -29,4 +29,3 @@ fn main() {
     println!("--BEFORE: {:#?}", config_2)
 }
 ```
-You can run it with `cargo run --example example`
