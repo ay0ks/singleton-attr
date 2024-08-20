@@ -36,24 +36,21 @@ pub fn singleton(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
             impl #name {
                 #[inline]
-                pub unsafe fn initialize(value: Self) {
-                    #instance_name = Some(Arc::new(Mutex::new(value)));
-                }
-
-                #[inline]
-                pub unsafe fn deinitialize() {
-                    #instance_name = None;
+                pub unsafe fn init_instance(value: Self) {
+                    #init_name.call_once(|| unsafe { 
+                        #instance_name = Some(Arc::new(Mutex::new(value)));
+                    });
                 }
 
                 #[inline]
                 pub fn get_instance() -> Arc<Mutex<Self>> {
-                    #init_name.call_once(|| unsafe { Self::initialize(Self::default()); });
+                    Self::init_instance(Self::default());
                     unsafe { #instance_name.clone().unwrap() }
                 }
 
                 #[inline]
                 fn clone(&self) -> Arc<Mutex<Self>> {
-                    unsafe { #instance_name.clone().unwrap() }
+                    Self::get_instance();
                 }
             }
 
