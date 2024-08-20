@@ -1,6 +1,9 @@
 # singleton-attr
 Simple to use singleton procedural attribute
 
+ - singleton-attr [![Crates.io Version](https://img.shields.io/crates/v/singleton-attr)](https://crates.io/crates/singleton-attr) [![docs.rs](https://img.shields.io/docsrs/singleton-attr)](https://docs.rs/singleton-attr/)
+ - singleton-attr-proc-macro [![Crates.io Version](https://img.shields.io/crates/v/singleton-attr-proc-macro)](https://crates.io/crates/singleton-attr-proc-macro) [![docs.rs](https://img.shields.io/docsrs/singleton-attr-proc-macro)](https://docs.rs/singleton-attr-proc-macro/)
+
 Example:
 ```rust
 use singleton_attr::singleton;
