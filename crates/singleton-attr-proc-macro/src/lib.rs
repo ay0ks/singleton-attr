@@ -27,7 +27,7 @@ pub fn singleton(_attr: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(quote! {
         mod #mod_name {
             use super::*;
-            use std::sync::{Arc, LockResult, Mutex, MutexGuard, Once};
+            use std::sync::{Arc, Mutex, Once};
 
             static #init_name: Once = Once::new();
             static mut #instance_name: Option<Arc<Mutex<#name>>> = None;
