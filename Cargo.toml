@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = ["crates/singleton-attr", "crates/singleton-attr-proc-macro"]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Dimitriy \"ay0ks\" <ay0o0ks000@gmail.com>"]
+license = "MIT"
+license-file = "LICENSE"
+repository = "https://github.com/ay0ks/singleton-attr"
+homepage = "https://ay0ks.wtf/"
+edition = "2021"
