@@ -5,10 +5,9 @@ use quote::{format_ident, quote};
 use rand::{self, distributions::Alphanumeric, Rng};
 use syn::{parse_macro_input, spanned::Spanned, ItemStruct, Token, Visibility};
 
-/// Singleton attribute macro
+/// Unsafe singleton attribute macro
 ///
-/// Mandates implementation of the `Default` trait,  forbids implementation of `Clone` and `Drop` traits.
-/// Use `Singleton::clone_instance` to clone the instance.
+/// Mandates implementation of the `Default` trait, forbids implementation of `Clone` and `Drop` traits.
 #[proc_macro_attribute]
 pub fn singleton(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let span = Span::call_site();
@@ -70,16 +69,81 @@ pub fn singleton(_attr: TokenStream, item: TokenStream) -> TokenStream {
                         &mut *#instance_name
                     }
                 }
-
-                #[inline]
-                fn clone_instance(&self) -> &'static mut Self {
-                    Self::get_instance()
-                }
             }
 
             impl Drop for #name {
                 fn drop(&mut self) {
                     unsafe { alloc::dealloc(#instance_name as *mut u8, Layout::new::<Self>()); }
+                }
+            }
+        }
+        #original_vis use #mod_name::#name;
+    })
+}
+
+/// Safe singleton attribute macro
+///
+/// Mandates implementation of the `Default` trait, forbids implementation of `Clone` and `Drop` traits.
+#[proc_macro_attribute]
+pub fn singleton_safe(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    let span = Span::call_site();
+    let source_path = span.source_file().path();
+    let source_file = source_path.as_os_str().to_str().unwrap();
+
+    let source_file = source_file
+        .chars()
+        .map(|c| if c.is_ascii_alphanumeric() { c } else { '_' })
+        .collect::<String>();
+
+    let mut input = parse_macro_input!(item as ItemStruct);
+
+    let prefix: String = rand::thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(8)
+        .map(char::from)
+        .collect();
+
+    let name = &input.ident;
+    let name_prefix = format!("__{}_S{}", source_file, prefix);
+    let (mod_name, instance_name) = (
+        format_ident!(
+            "{}",
+            format!("{}_{}_", name_prefix, name).to_ascii_lowercase()
+        ),
+        format_ident!(
+            "{}",
+            format!("{}_{}_INSTANCE_", name_prefix, name).to_ascii_uppercase()
+        ),
+    );
+    let original_vis = input.vis.clone();
+    input.vis = Visibility::Public(Token![pub](input.vis.span()));
+
+    TokenStream::from(quote! {
+        mod #mod_name {
+            use std::sync::{Arc, LockResult, Mutex, MutexGuard};
+            use singleton_attr::traits::SafeSingleton;
+            use super::*;
+
+            static mut #instance_name: Option<Arc<Mutex<#name>>> = None;
+            #input
+
+            impl SafeSingleton for #name {
+                #[inline]
+                fn init_instance(instance: Self) {
+                    unsafe {
+                        #instance_name = Some(Arc::new(Mutex::new(instance)));
+                    }
+                }
+
+                #[inline]
+                fn get_instance() -> LockResult<MutexGuard<'static, Self>> {
+                    unsafe {
+                        if let None = #instance_name {
+                            Self::init_instance(Self::default());
+                        }
+
+                        #instance_name.as_ref().unwrap().lock()
+                    }
                 }
             }
         }
