@@ -1,10 +1,9 @@
 [package]
 name = "singleton-attr-proc-macro"
-description = "Singleton procedural macro internal implementation"
+description = "Simple to use singleton procedural attribute (internal implementation)"
 version.workspace = true
 authors.workspace = true
 license.workspace = true
-license-file.workspace = true
 repository.workspace = true
 homepage.workspace = true
 edition.workspace = true
