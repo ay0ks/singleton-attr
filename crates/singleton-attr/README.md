@@ -29,3 +29,5 @@ fn main() {
     println!(" - New instance: {:#?}", config_2)
 }
 ```
+
+Check [examples](https://github.com/ay0ks/singleton-attr/tree/main/crates/singleton-attr/examples) for details.
