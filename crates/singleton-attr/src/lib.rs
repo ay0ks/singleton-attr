@@ -2,4 +2,4 @@
 #![feature(negative_impls, negative_bounds)]
 pub mod traits;
 extern crate singleton_attr_proc_macro;
-pub use singleton_attr_proc_macro::singleton;
+pub use singleton_attr_proc_macro::{singleton, singleton_safe};
