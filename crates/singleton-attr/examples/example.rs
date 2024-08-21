@@ -1,4 +1,4 @@
-use singleton_attr::singleton;
+use singleton_attr::{singleton, traits::Singleton};
 
 #[singleton]
 #[derive(Debug, Default)]
@@ -12,12 +12,9 @@ fn main() {
     let config_1 = Config::get_instance();
 
     println!("--BEFORE: {:#?}", config_1);
-    {
-        let mut config_1_lock = config_1.lock().unwrap();
-        config_1_lock.a = 123;
-        config_1_lock.b = -123;
-        config_1_lock.c = "Hello, World!".to_string();
-    }
+    config_1.a = 123;
+    config_1.b = -123;
+    config_1.c = "Hello, World!".to_string();
     println!("--AFTER: {:#?}", config_1);
 
     let config_2 = Config::get_instance();
