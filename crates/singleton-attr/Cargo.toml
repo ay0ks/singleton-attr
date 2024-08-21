@@ -13,7 +13,7 @@ edition.workspace = true
 singleton-attr-proc-macro = "0.1.3"
 
 [dev-dependencies]
-singleton-attr = "0.1.3"
+singleton-attr = "0"
 rand = "0.8"
 
 [[example]]
