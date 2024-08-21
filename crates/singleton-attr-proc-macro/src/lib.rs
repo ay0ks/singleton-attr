@@ -5,6 +5,10 @@ use quote::{format_ident, quote};
 use rand::{self, distributions::Alphanumeric, Rng};
 use syn::{parse_macro_input, spanned::Spanned, ItemStruct, Token, Visibility};
 
+/// Singleton attribute macro
+///
+/// Mandates implementation of the `Default` trait,  forbids implementation of `Clone` and `Drop` traits.
+/// Use `Singleton::clone_instance` to clone the instance.
 #[proc_macro_attribute]
 pub fn singleton(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let span = Span::call_site();

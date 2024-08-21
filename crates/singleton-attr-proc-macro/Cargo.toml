@@ -1,6 +1,7 @@
 [package]
 name = "singleton-attr-proc-macro"
 description = "Simple to use singleton procedural attribute (internal implementation)"
+readme.workspace = true
 version.workspace = true
 authors.workspace = true
 license.workspace = true
