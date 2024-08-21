@@ -6,7 +6,7 @@ Simple to use singleton procedural attribute
 
 Example:
 ```rust
-use singleton_attr::singleton;
+use singleton_attr::{singleton, traits::Singleton};
 
 #[singleton]
 #[derive(Debug, Default)]
@@ -19,16 +19,13 @@ pub struct Config {
 fn main() {
     let config_1 = Config::get_instance();
 
-    println!("--BEFORE: {:#?}", config_1);
-    {
-        let mut config_1_lock = config_1.lock().unwrap();
-        config_1_lock.a = 123;
-        config_1_lock.b = -123;
-        config_1_lock.c = "Hello, World!".to_string();
-    }
-    println!("--AFTER: {:#?}", config_1);
+    println!(" - Before: {:#?}", config_1);
+    config_1_lock.a = 123;
+    config_1_lock.b = -123;
+    config_1_lock.c = "Hello, World!".to_string();
+    println!(" - After: {:#?}", config_1);
 
     let config_2 = Config::get_instance();
-    println!("--BEFORE: {:#?}", config_2)
+    println!(" - New instance: {:#?}", config_2)
 }
 ```
