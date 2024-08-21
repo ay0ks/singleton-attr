@@ -21,7 +21,7 @@ fn main() {
         println!("MAIN ---- a: {}, b: {}", config.a, config.b);
     }
 
-    // thread_1 sets a and b to random values every 5 seconds
+    // thread_1 sets a and b to random values
     let thread_1 = thread::spawn(move || loop {
         let mut config = Config::get_instance().unwrap();
         config.a = rand::random::<u32>();
@@ -29,14 +29,14 @@ fn main() {
         println!("THREAD_1 ---- a = {}, b = {}", config.a, config.b);
     });
 
-    // thread_2 increments a by 1 every 2 seconds
+    // thread_2 increments a by 1 every
     let thread_2 = thread::spawn(move || loop {
         let mut config = Config::get_instance().unwrap();
         config.a += 1;
         println!("THREAD_2 ---- a += 1; a: {}", config.a);
     });
 
-    // thread_3 prints the values of a and b every 1 second
+    // thread_3 prints the values of a and b
     let thread_3 = thread::spawn(move || loop {
         let config = Config::get_instance().unwrap();
         println!("THREAD_3 ---- a: {}, b: {}", config.a, config.b);
