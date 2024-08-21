@@ -21,3 +21,6 @@ name = "01_basic"
 
 [[example]]
 name = "02_threads"
+
+[[example]]
+name = "03_safe_threads"
