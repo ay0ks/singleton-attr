@@ -1,6 +1,6 @@
 [package]
 name = "singleton-attr"
-description = "Simple to use singleton procedural attribute"
+description = "Simple to use singleton procedural attribute and derive macro"
 readme.workspace = true
 version.workspace = true
 authors.workspace = true
@@ -10,7 +10,7 @@ homepage.workspace = true
 edition.workspace = true
 
 [dependencies]
-singleton-attr-proc-macro = { path = "../singleton-attr-proc-macro" }
+singleton-attr-proc-macro = "0.1.4"
 
 [dev-dependencies]
 rand = "0.8"
