@@ -1,8 +1,8 @@
 #![feature(proc_macro_span)]
 extern crate proc_macro;
-use proc_macro::{Span, TokenStream};
-use quote::{format_ident, quote};
-use syn::{parse_macro_input, spanned::Spanned, ItemStruct, Token, Visibility};
+use proc_macro::TokenStream;
+use quote::quote;
+use syn::{parse_macro_input, ItemStruct};
 
 #[proc_macro_derive(Singleton)]
 pub fn singleton_derive(item: TokenStream) -> TokenStream {
