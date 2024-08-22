@@ -10,10 +10,7 @@ homepage.workspace = true
 edition.workspace = true
 
 [dependencies]
-singleton-attr-proc-macro = "0.1.5"
-
-[dev-dependencies]
-rand = "0.8"
+singleton-attr-proc-macro = "0.1.6"
 
 [[example]]
 name = "01_basic"
