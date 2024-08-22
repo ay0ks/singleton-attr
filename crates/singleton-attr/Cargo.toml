@@ -10,10 +10,9 @@ homepage.workspace = true
 edition.workspace = true
 
 [dependencies]
-singleton-attr-proc-macro = "0.1.3"
+singleton-attr-proc-macro = { path = "../singleton-attr-proc-macro" }
 
 [dev-dependencies]
-singleton-attr = "0"
 rand = "0.8"
 
 [[example]]
