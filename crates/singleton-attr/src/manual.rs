@@ -1,157 +1,78 @@
 #[macro_export]
-macro_rules! singleton_define {
-    ($type:ident) => {
-        static mut __INSTANCE: *mut $type = std::ptr::null_mut();
-    };
-
-    ($type:ident<$($gen:tt),+>) => {
-        static mut __INSTANCE: *mut $type<$($gen),+> = std::ptr::null_mut();
-    };
-}
-
-#[macro_export]
-macro_rules! singleton_impl_methods {
-    () => {
-        #[inline]
-        fn init_instance(instance: Self) {
-            unsafe {
-                __INSTANCE = std::alloc::alloc(std::alloc::Layout::new::<Self>()) as *mut Self;
-                std::ptr::write_volatile(__INSTANCE, instance);
-            }
-        }
-
-        #[inline]
-        fn get_instance() -> std::sync::LockResult<std::sync::MutexGuard<'static, Self>> {
-            unsafe {
-                if __INSTANCE.is_null() {
-                    Self::init_instance(Self::default());
-                }
-                &mut *__INSTANCE
-            }
-        }
-    };
-}
-
-#[macro_export]
-macro_rules! singleton_impl {
-    ($type:ident) => {
-        impl singleton_attr::traits::Singleton for $type {
-            singleton_impl_methods!();
-        }
-    };
-
-    ($type:ident<$($gen:tt),+>) => {
-        impl<$($gen),+> singleton_attr::traits::Singleton for $type<$($gen),+> {
-            singleton_impl_methods!();
-        }
-    };
-
-    ($type:ident<$($gen:tt),+> where $($bound:tt)+) => {
-        impl<$($gen),+> singleton_attr::traits::Singleton for $type<$($gen),+> where $($bound)+ {
-            singleton_impl_methods!();
-        }
-    };
-}
-
-#[macro_export]
 macro_rules! singleton_manual {
-    ($type:ident $(with $($known_gen:ident = $known_val:tt),+)?) => {
+    (
+        $([$($trait_bound:tt)+])?
+        $type:ident$(<$($inner_gen:ty),+>)?
+        $([$($outer_gen:ty),+])?
+        $(where [$($where_bound:tt)+])?
+        $(with [$($param_gen:ty),+])?
+    ) => {
         const _: () = {
-            singleton_define!($type$(<$($known_val),+>)?);
-            singleton_impl!($type);
-        };
-    };
+            static mut __INSTANCE: *mut $type$(<$($param_gen),+>)? = None;
 
-    ($type:ident<$($gen:tt),+> $(with $($known_gen:ident = $known_val:tt),+)?) => {
-        const _: () = {
-            singleton_define!($type$(<$($known_val),+>)?);
-            singleton_impl!($type<$($gen),+>);
-        };
-    };
-
-    ($type:ident<$($gen:tt),+> $(with $($known_gen:ident = $known_val:tt),+)? where $($bound:tt)+) => {
-        const _: () = {
-            singleton_define!($type$(<$($known_val),+>)?);
-            singleton_impl!($type<$($gen),+> where $($bound)+);
-        };
-    };
-}
-
-#[macro_export]
-macro_rules! singleton_safe_define {
-    ($type:ident) => {
-        static mut __INSTANCE: Option<std::sync::Arc<std::sync::Mutex<$type>>> = None;
-    };
-
-    ($type:ident<$($gen:tt),+>) => {
-        static mut __INSTANCE: Option<std::sync::Arc<std::sync::Mutex<$type<$($gen),+>>>> = None;
-    };
-}
-
-#[macro_export]
-macro_rules! singleton_safe_impl_methods {
-    () => {
-        #[inline]
-        fn init_instance(instance: Self) {
-            unsafe {
-                __INSTANCE = Some(std::sync::Arc::new(std::sync::Mutex::new(instance)));
-            }
-        }
-
-        #[inline]
-        fn get_instance() -> std::sync::LockResult<std::sync::MutexGuard<'static, Self>> {
-            unsafe {
-                if let None = __INSTANCE {
-                    Self::init_instance(Self::default());
+            impl$(<$($trait_bound)+>)? singleton_attr::traits::SafeSingleton for $type$(<$($outer_gen),+>)?
+            $(where $($where_bound)+)? {
+                #[inline]
+                fn init_instance(instance: Self) {
+                    unsafe {
+                        __INSTANCE = std::alloc::alloc(std::alloc::Layout::new::<Self>()) as *mut Self;
+                        std::ptr::write_volatile(__INSTANCE, instance);
+                    }
                 }
 
-                __INSTANCE.as_ref().unwrap().lock()
+                #[inline]
+                fn get_instance() -> std::sync::LockResult<std::sync::MutexGuard<'static, Self>> {
+                    unsafe {
+                        if __INSTANCE.is_null() {
+                            Self::init_instance(Self::default());
+                        }
+                        &mut *__INSTANCE
+                    }
+                }
             }
-        }
-    };
-}
 
-#[macro_export]
-macro_rules! singleton_safe_impl {
-    ($type:ident) => {
-        impl singleton_attr::traits::SafeSingleton for $type {
-            singleton_safe_impl_methods!();
-        }
-    };
-
-    ($type:ident<$($gen:tt),+>) => {
-        impl<$($gen),+> singleton_attr::traits::SafeSingleton for $type<$($gen),+> {
-            singleton_safe_impl_methods!();
-        }
-    };
-
-    ($type:ident<$($gen:tt),+> where $($bound:tt)+) => {
-        impl<$($gen),+> singleton_attr::traits::SafeSingleton for $type<$($gen),+> where $($bound)+ {
-            singleton_safe_impl_methods!();
-        }
+            impl$(<$($trait_bound)+>)? Drop for $type$(<$($outer_gen),+>)?
+            $(where $($where_bound)+)? {
+                fn drop(&mut self) {
+                    unsafe { std::alloc::dealloc(__INSTANCE as *mut u8, std::alloc::Layout::new::<Self>()); }
+                }
+            }
+        };
     };
 }
 
 #[macro_export]
 macro_rules! singleton_safe_manual {
-    ($type:ident $(with $($known_gen:ident = $known_val:tt),+)?) => {
+    (
+        $([$($trait_bound:tt)+])?
+        $type:ident$(<$($inner_gen:ty),+>)?
+        $([$($outer_gen:ty),+])?
+        $(where [$($where_bound:tt)+])?
+        $(with [$($param_gen:ty),+])?
+    ) => {
         const _: () = {
-            singleton_safe_define!($type$(<$($known_val),+>)?);
-            singleton_safe_impl!($type);
-        };
-    };
+            static mut __INSTANCE: Option<std::sync::Arc<std::sync::Mutex<$type$(<$($param_gen),+>)?>>> = None;
 
-    ($type:ident<$($gen:tt),+> $(with $($known_gen:ident = $known_val:tt),+)?) => {
-        const _: () = {
-            singleton_safe_define!($type$(<$($known_val),+>)?);
-            singleton_safe_impl!($type<$($gen),+>);
-        };
-    };
+            impl$(<$($trait_bound)+>)? singleton_attr::traits::SafeSingleton for $type$(<$($outer_gen),+>)?
+            $(where $($where_bound)+)? {
+                #[inline]
+                fn init_instance(instance: Self) {
+                    unsafe {
+                        __INSTANCE = Some(std::sync::Arc::new(std::sync::Mutex::new(instance)));
+                    }
+                }
 
-    ($type:ident<$($gen:tt),+> $(with $($known_gen:ident = $known_val:tt),+)? where $($bound:tt)+) => {
-        const _: () = {
-            singleton_safe_define!($type$(<$($known_val),+>)?);
-            singleton_safe_impl!($type<$($gen),+> where $($bound)+);
+                #[inline]
+                fn get_instance() -> std::sync::LockResult<std::sync::MutexGuard<'static, Self>> {
+                    unsafe {
+                        if let None = __INSTANCE {
+                            Self::init_instance(Self::default());
+                        }
+
+                        __INSTANCE.as_ref().unwrap().lock()
+                    }
+                }
+            }
         };
     };
 }

@@ -32,12 +32,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d8adc4bb1803a324070e64a98ae98f38934d91957a99cfb3a43dcbc01bc56439"
 
 [[package]]
-name = "paste"
-version = "1.0.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
-
-[[package]]
 name = "ppv-lite86"
 version = "0.2.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -96,18 +90,17 @@ dependencies = [
 
 [[package]]
 name = "singleton-attr"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
- "paste",
  "rand",
- "singleton-attr-proc-macro 0.1.4",
+ "singleton-attr-proc-macro 0.1.5",
 ]
 
 [[package]]
 name = "singleton-attr-proc-macro"
-version = "0.1.4"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6db2625182da9e72fedf78d4a8385cbbc7cbc7fb23685f6248743b533026f66e"
+checksum = "c581b5065e20d7925f7864d0c9ab5523b63fd255ee6e7392acf2cec26cebe746"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -117,7 +110,7 @@ dependencies = [
 
 [[package]]
 name = "singleton-attr-proc-macro"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "proc-macro2",
  "quote",
