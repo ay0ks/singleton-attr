@@ -10,8 +10,7 @@ homepage.workspace = true
 edition.workspace = true
 
 [dependencies]
-singleton-attr-proc-macro = "0.1.4"
-paste = "1.0"
+singleton-attr-proc-macro = "0.1.5"
 
 [dev-dependencies]
 rand = "0.8"
