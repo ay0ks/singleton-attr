@@ -11,6 +11,7 @@ edition.workspace = true
 
 [dependencies]
 singleton-attr-proc-macro = "0.1.4"
+paste = "1.0"
 
 [dev-dependencies]
 rand = "0.8"
@@ -32,3 +33,6 @@ name = "05_derive_threads"
 
 [[example]]
 name = "06_derive_safe_threads"
+
+[[example]]
+name = "07_manual"
