@@ -1,7 +1,6 @@
-use singleton_attr::{singleton, traits::Singleton};
+use singleton_attr::{derive, traits::Singleton};
 
-#[singleton]
-#[derive(Debug, Default)]
+#[derive(Debug, Default, derive::Singleton)]
 pub struct Config {
     pub a: i32,
     pub b: i32,

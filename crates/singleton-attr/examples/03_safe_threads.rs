@@ -1,11 +1,10 @@
 use singleton_attr::{
-    singleton_safe,
+    derive,
     traits::{SafeSingleton, Singleton},
 };
 use std::{thread, time};
 
-#[singleton_safe]
-#[derive(Debug, Default)]
+#[derive(Debug, Default, derive::SafeSingleton)]
 pub struct Config {
     pub a: u32,
     pub b: u32,

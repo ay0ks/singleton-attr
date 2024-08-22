@@ -6,29 +6,3 @@ Simple to use singleton procedural attribute
 
 Manual macros give more control over your structure, but derive macros are simpler to use.
 Check documentation and [examples](https://github.com/ay0ks/singleton-attr/tree/main/crates/singleton-attr/examples) for details.
-
-Example:
-```rust
-use singleton_attr::{singleton, traits::Singleton};
-
-#[singleton]
-#[derive(Debug, Default)]
-pub struct Config {
-    pub a: i32,
-    pub b: i32,
-    pub c: String,
-}
-
-fn main() {
-    let config_1 = Config::get_instance();
-
-    println!(" - Before: {:#?}", config_1);
-    config_1_lock.a = 123;
-    config_1_lock.b = -123;
-    config_1_lock.c = "Hello, World!".to_string();
-    println!(" - After: {:#?}", config_1);
-
-    let config_2 = Config::get_instance();
-    println!(" - New instance: {:#?}", config_2)
-}
-```
