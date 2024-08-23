@@ -7,37 +7,35 @@ macro_rules! singleton_manual {
         $(where [$($where_bound:tt)+])?
         $(with [$($param_gen:ty),+])?
     ) => {
-        const _: () = {
-            static mut __INSTANCE: *mut $type$(<$($param_gen),+>)? = None;
+        static mut __INSTANCE: *mut $type$(<$($param_gen),+>)? = std::ptr::null_mut();
 
-            impl$(<$($trait_bound)+>)? singleton_attr::traits::SafeSingleton for $type$(<$($outer_gen),+>)?
-            $(where $($where_bound)+)? {
-                #[inline]
-                fn init_instance(instance: Self) {
-                    unsafe {
-                        __INSTANCE = std::alloc::alloc(std::alloc::Layout::new::<Self>()) as *mut Self;
-                        std::ptr::write_volatile(__INSTANCE, instance);
-                    }
-                }
-
-                #[inline]
-                fn get_instance() -> std::sync::LockResult<std::sync::MutexGuard<'static, Self>> {
-                    unsafe {
-                        if __INSTANCE.is_null() {
-                            Self::init_instance(Self::default());
-                        }
-                        &mut *__INSTANCE
-                    }
+        impl$(<$($trait_bound)+>)? singleton_attr::traits::Singleton for $type$(<$($outer_gen),+>)?
+        $(where $($where_bound)+)? {
+            #[inline]
+            fn init_instance(instance: Self) {
+                unsafe {
+                    __INSTANCE = std::alloc::alloc(std::alloc::Layout::new::<Self>()) as *mut Self;
+                    std::ptr::write_volatile(__INSTANCE, instance);
                 }
             }
 
-            impl$(<$($trait_bound)+>)? Drop for $type$(<$($outer_gen),+>)?
-            $(where $($where_bound)+)? {
-                fn drop(&mut self) {
-                    unsafe { std::alloc::dealloc(__INSTANCE as *mut u8, std::alloc::Layout::new::<Self>()); }
+            #[inline]
+            fn get_instance() -> &'static mut Self {
+                unsafe {
+                    if __INSTANCE.is_null() {
+                        Self::init_instance(Self::default());
+                    }
+                    &mut *__INSTANCE
                 }
             }
-        };
+        }
+
+        impl$(<$($trait_bound)+>)? Drop for $type$(<$($outer_gen),+>)?
+        $(where $($where_bound)+)? {
+            fn drop(&mut self) {
+                unsafe { std::alloc::dealloc(__INSTANCE as *mut u8, std::alloc::Layout::new::<Self>()); }
+            }
+        }
     };
 }
 

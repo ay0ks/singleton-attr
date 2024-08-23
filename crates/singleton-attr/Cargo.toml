@@ -22,13 +22,4 @@ name = "02_threads"
 name = "03_safe_threads"
 
 [[example]]
-name = "04_derive_basic"
-
-[[example]]
-name = "05_derive_threads"
-
-[[example]]
-name = "06_derive_safe_threads"
-
-[[example]]
-name = "07_manual"
+name = "04_manual"
