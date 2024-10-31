@@ -1,5 +1,3 @@
-#![allow(internal_features)]
-#![feature(negative_impls, negative_bounds)]
 mod manual;
 pub mod traits;
 #[macro_use]
